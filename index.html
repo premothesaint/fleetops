@@ -25,6 +25,10 @@
   --font:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
   --r:4px;--rm:8px;
   --topbar-h:56px;--bottomnav-h:64px;
+  --sat:env(safe-area-inset-top,0px);
+  --sar:env(safe-area-inset-right,0px);
+  --sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px);
 }
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;scroll-behavior:smooth}
@@ -35,7 +39,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .shell{position:relative;z-index:1;display:grid;grid-template-columns:220px 1fr;grid-template-rows:var(--topbar-h) 1fr;min-height:100vh}
 
 /* ── TOPBAR ── */
-.topbar{grid-column:1/-1;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--border);background:rgba(5,10,5,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:sticky;top:0;z-index:200;gap:16px;height:var(--topbar-h)}
+.topbar{grid-column:1/-1;display:flex;align-items:center;padding:0 20px;padding-top:var(--sat);border-bottom:1px solid var(--border);background:rgba(5,10,5,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:sticky;top:0;z-index:200;gap:16px;height:calc(var(--topbar-h) + var(--sat))}
 .logo{font-size:16px;font-weight:800;letter-spacing:0.15em;color:var(--g0);text-shadow:0 0 20px rgba(0,255,65,0.5);flex-shrink:0;white-space:nowrap}
 .logo span{color:var(--text2);font-weight:400;font-size:10px;letter-spacing:0.15em;margin-left:6px}
 .topbar-mid{flex:1;display:flex;align-items:center;gap:10px;min-width:0}
@@ -62,7 +66,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .hamburger svg{width:20px;height:20px}
 
 /* ── SIDEBAR ── */
-.sidebar{border-right:1px solid var(--border);background:rgba(9,15,9,0.95);padding:20px 0;position:sticky;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));overflow-y:auto;scrollbar-width:none;transition:transform 0.25s ease}
+.sidebar{border-right:1px solid var(--border);background:rgba(9,15,9,0.95);padding:20px 0;position:sticky;top:calc(var(--topbar-h) + var(--sat));height:calc(100vh - var(--topbar-h) - var(--sat));overflow-y:auto;scrollbar-width:none;transition:transform 0.25s ease}
 .sidebar::-webkit-scrollbar{display:none}
 .sidebar-section{margin-bottom:24px}
 .sidebar-label{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--text3);padding:0 20px;margin-bottom:8px;text-transform:uppercase}
@@ -101,20 +105,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .kpi.amber::before{background:linear-gradient(90deg,transparent,var(--amber),transparent)}
 .kpi.blue .kpi-num{color:var(--blue);text-shadow:0 0 30px rgba(0,212,255,0.3)}
 .kpi.blue::before{background:linear-gradient(90deg,transparent,var(--blue),transparent)}
-.kpi:nth-child(1){animation-delay:0.05s}.kpi:nth-child(2){animation-delay:0.1s}.kpi:nth-child(3){animation-delay:0.15s}.kpi:nth-child(4){animation-delay:0.2s}
 @keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── SCROLL-REVEAL ── */
-/* Elements start invisible; JS adds .revealed when they enter the viewport */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.55s cubic-bezier(0.22,1,0.36,1),transform 0.55s cubic-bezier(0.22,1,0.36,1)}
-.reveal.revealed{opacity:1;transform:translateY(0)}
-.reveal-left{opacity:0;transform:translateX(-22px);transition:opacity 0.55s cubic-bezier(0.22,1,0.36,1),transform 0.55s cubic-bezier(0.22,1,0.36,1)}
-.reveal-left.revealed{opacity:1;transform:translateX(0)}
-/* Stagger delays for siblings */
-.reveal-d1{transition-delay:0.07s}
-.reveal-d2{transition-delay:0.14s}
-.reveal-d3{transition-delay:0.21s}
-.reveal-d4{transition-delay:0.28s}
 
 /* ── TABLE ── */
 .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap}
@@ -127,10 +118,10 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .tbl{width:100%;border-collapse:collapse;min-width:600px}
 .tbl thead tr{border-bottom:1px solid var(--border2);background:var(--surface2)}
 .tbl th{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);padding:10px 14px;text-align:left;font-weight:400;white-space:nowrap}
-.tbl tbody tr{border-bottom:1px solid rgba(0,255,65,0.05);transition:background 0.12s}
+.tbl tbody tr{border-bottom:1px solid rgba(0,255,65,0.05);transition:background 0.12s;cursor:pointer}
 .tbl tbody tr:last-child{border-bottom:none}
-.tbl tbody tr:hover{background:var(--dim)}
-.tbl td{padding:11px 14px;font-size:13px;vertical-align:middle}
+.tbl tbody tr:hover{background:var(--dim2)}
+.tbl tbody tr:hover td .vname{color:var(--g0)}
 .tt{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px;white-space:nowrap}
 .tt-personal{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(0,212,255,0.2)}
 .tt-wingvan{background:rgba(180,100,255,0.1);color:#C87BFF;border:1px solid rgba(180,100,255,0.2)}
@@ -149,7 +140,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .dot-on{background:var(--g1);box-shadow:0 0 6px rgba(0,255,65,0.6)}
 .dot-off{background:var(--surface3);border:1px solid var(--border2)}
 .plate{font-family:var(--mono);font-size:12px;color:var(--g2);letter-spacing:0.08em}
-.vname{font-size:13px;font-weight:600;color:var(--text)}
+.vname{font-size:13px;font-weight:600;color:var(--text);transition:color 0.15s}
 .vfrom{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--mono);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── PANELS ── */
@@ -164,15 +155,17 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .bar-track{flex:1;height:6px;background:var(--surface3);border-radius:1px;overflow:hidden}
 .bar-fill{height:100%;border-radius:1px;transition:width 0.8s cubic-bezier(0.22,1,0.36,1)}
 .bar-val{font-family:var(--mono);font-size:10px;color:var(--text2);width:20px;text-align:right;flex-shrink:0}
-.loan-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,255,65,0.05);gap:8px}
+.loan-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,255,65,0.05);gap:8px;cursor:pointer;transition:background 0.12s;border-radius:var(--r);padding-left:4px;padding-right:4px;margin:0 -4px}
 .loan-item:last-child{border-bottom:none}
+.loan-item:hover{background:var(--dim)}
 .loan-vname{font-size:12px;font-weight:600;color:var(--text)}
 .loan-from{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:1px}
 .loan-amt{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber);white-space:nowrap;flex-shrink:0}
 
 /* ── MOBILE CARD VIEW ── */
 .card-list{display:none;flex-direction:column;gap:10px}
-.vcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rm);padding:14px;display:flex;flex-direction:column;gap:10px}
+.vcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rm);padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:border-color 0.15s,background 0.15s}
+.vcard:hover{border-color:var(--border2);background:var(--surface2)}
 .vcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .vcard-name{font-size:14px;font-weight:700;color:var(--text);line-height:1.2}
 .vcard-from{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:3px}
@@ -183,7 +176,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .vcard-dot-item{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.06em}
 
 /* ── BOTTOM NAV (mobile) ── */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottomnav-h);background:rgba(5,10,5,0.97);border-top:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:300;padding:0 8px;align-items:center;justify-content:space-around}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:calc(var(--bottomnav-h) + var(--sab));background:rgba(5,10,5,0.97);border-top:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:300;padding:0 8px var(--sab);align-items:center;justify-content:space-around}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;color:var(--text3);font-family:var(--mono);font-size:9px;letter-spacing:0.08em;cursor:pointer;border-radius:var(--r);transition:all 0.15s;border:none;background:none;-webkit-tap-highlight-color:transparent}
 .bnav-item svg{width:20px;height:20px}
 .bnav-item.active{color:var(--g0)}
@@ -210,15 +203,13 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   .shell{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr}
   .sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;z-index:160;transform:translateX(-100%);padding-top:calc(var(--topbar-h) + 16px)}
   .sidebar.open{transform:translateX(0)}
-  .main{padding:14px;padding-bottom:calc(var(--bottomnav-h) + 14px)}
+  .main{padding:14px;padding-bottom:calc(var(--bottomnav-h) + var(--sab) + 14px)}
   .kpi-row{grid-template-columns:repeat(2,1fr);gap:8px}
   .panels{grid-template-columns:1fr}
   .bottom-nav{display:flex}
   .conn-label{display:none !important}
   .pill-status{display:none}
-  /* hide topbar search on mobile — search shown below KPI cards */
   .topbar-mid{display:none}
-  /* refresh stays top-right, icon only */
   .btn-refresh .refresh-label{display:none}
   .btn-refresh{padding:6px 8px}
 }
@@ -228,19 +219,130 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   .topbar{padding:0 12px;gap:8px}
 }
 .mobile-search{display:none;margin-bottom:2px}
-.mobile-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);font-family:var(--mono);font-size:16px;color:var(--text);padding:7px 12px 7px 32px;outline:none;height:34px;transform:scale(1);-webkit-transform:scale(1)}
+.mobile-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);font-family:var(--mono);font-size:16px;color:var(--text);padding:7px 12px 7px 32px;outline:none;height:34px}
 .mobile-search input:focus{border-color:var(--g2)}
 .mobile-search-wrap{position:relative}
 .mobile-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;opacity:0.4;pointer-events:none}
-@media(max-width:900px){
-  .mobile-search{display:block}
-}
+@media(max-width:900px){.mobile-search{display:block}}
 
-/* show card list on mobile, hide table */
 @media(max-width:640px){
   .table-wrap table{display:none}
   .card-list{display:flex}
 }
+
+/* ══════════════════════════════════════════
+   VEHICLE DETAIL MODAL
+══════════════════════════════════════════ */
+.vmodal-overlay{
+  display:none;position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  align-items:flex-end;justify-content:center;padding:0;
+  opacity:0;transition:opacity 0.25s ease;
+}
+.vmodal-overlay.open{display:flex}
+.vmodal-overlay.is-visible{opacity:1}
+@media(min-width:641px){
+  .vmodal-overlay{align-items:center;padding:16px}
+}
+.vmodal{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:18px 18px 0 0;
+  width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+  position:relative;
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  will-change:transform;
+}
+.vmodal-overlay.is-visible .vmodal{transform:translateY(0)}
+@media(min-width:641px){
+  .vmodal{
+    border-radius:var(--rm);
+    transform:scale(0.96);opacity:0;
+    transition:transform 0.25s cubic-bezier(0.22,1,0.36,1),opacity 0.25s ease;
+  }
+  .vmodal-overlay.is-visible .vmodal{transform:scale(1);opacity:1}
+}
+
+/* drag handle */
+.vmodal-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:10px auto 0;flex-shrink:0}
+@media(min-width:641px){.vmodal-handle{display:none}}
+
+.vmodal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 18px 14px;border-bottom:1px solid var(--border);gap:10px}
+.vmodal-title-wrap{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.vmodal-type-badge{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.08em;padding:3px 8px;border-radius:2px;flex-shrink:0;margin-top:3px}
+.vmodal-name{font-size:17px;font-weight:800;color:var(--text);line-height:1.2}
+.vmodal-from{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:0.05em}
+.vmodal-close{background:var(--dim);border:1px solid var(--border);border-radius:var(--r);color:var(--text3);cursor:pointer;padding:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.vmodal-close:hover{background:var(--dim3);color:var(--text);border-color:var(--border2)}
+
+.vmodal-body{padding:16px 18px 28px;display:flex;flex-direction:column;gap:14px}
+
+/* field grid */
+.vmodal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vmodal-field{display:flex;flex-direction:column;gap:5px}
+.vmodal-flabel{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase}
+.vmodal-fval{font-family:var(--mono);font-size:12px;color:var(--text);font-weight:500;letter-spacing:0.04em}
+.vmodal-fval.plate{color:var(--g2);font-size:15px;letter-spacing:0.1em}
+.vmodal-amount{color:var(--amber);font-size:14px;font-weight:700}
+
+/* RFID row */
+.vmodal-rfid-row{display:flex;align-items:center;justify-content:space-between;background:rgba(0,255,65,0.04);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;gap:10px}
+.vmodal-rfid-val{color:var(--g1);font-size:13px;letter-spacing:0.08em}
+.vmodal-copy-btn{display:flex;align-items:center;gap:5px;background:var(--dim2);border:1px solid var(--g3);border-radius:var(--r);color:var(--g0);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.08em;padding:6px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s}
+.vmodal-copy-btn:hover{background:var(--dim3);border-color:var(--g1)}
+.vmodal-copy-btn.copied{background:rgba(0,192,50,0.2);border-color:var(--g1);color:var(--g0)}
+
+/* Loan section */
+.vmodal-loan-section{border:1px solid var(--border);border-radius:var(--rm);overflow:hidden}
+.vmodal-section-title{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.vmodal-loan-section .vmodal-row{padding:12px 12px 0;gap:10px}
+.vmodal-loan-section .vmodal-row:last-of-type{padding-bottom:12px}
+
+/* Remaining months bar */
+.vmodal-months-bar{padding:10px 12px 14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.vmodal-months-num{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--amber);line-height:1}
+.vmodal-months-track{height:5px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.vmodal-months-fill{height:100%;background:linear-gradient(90deg,var(--g3),var(--amber));border-radius:2px;transition:width 0.6s cubic-bezier(0.22,1,0.36,1)}
+
+/* Balance summary box */
+.vmodal-balance-box{margin:0 12px 14px;background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.2);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.vb-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.vb-label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:var(--text3);text-transform:uppercase}
+.vb-val{font-family:var(--mono);font-size:12px;color:var(--text2);font-weight:500}
+.vb-divider{height:1px;background:rgba(255,179,0,0.15);margin:2px 0}
+.vb-row.total .vb-label{color:var(--amber);font-size:10px;font-weight:700}
+.vb-row.total .vb-val{color:var(--amber);font-size:16px;font-weight:800;text-shadow:0 0 14px rgba(255,179,0,0.35)}
+
+/* ── SHEETS DRAWER ── */
+.sheets-drawer{position:fixed;right:0;bottom:calc(var(--bottomnav-h) + 80px + env(safe-area-inset-bottom,0px));z-index:500;display:flex;align-items:center;transform:translateX(calc(100% - 22px));transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);will-change:transform;padding-right:env(safe-area-inset-right,0px)}
+.sheets-drawer.open{transform:translateX(0)}
+.sheets-notch{display:flex;align-items:center;justify-content:center;width:22px;height:52px;background:rgba(0,192,50,0.14);border:1px solid rgba(0,255,65,0.35);border-right:none;border-radius:8px 0 0 8px;cursor:pointer;color:var(--g1);flex-shrink:0;transition:background 0.2s;-webkit-tap-highlight-color:transparent;padding:0}
+.sheets-notch:hover{background:rgba(0,192,50,0.26)}
+.notch-chevron{width:14px;height:14px;flex-shrink:0;transition:transform 0.35s cubic-bezier(0.22,1,0.36,1)}
+.sheets-drawer.open .notch-chevron{transform:rotate(180deg)}
+.sheets-btn{display:flex;align-items:center;gap:8px;padding:0 18px;height:52px;background:rgba(0,192,50,0.12);border:1px solid rgba(0,255,65,0.35);border-left:none;border-radius:0 8px 8px 0;color:var(--g0);font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:4px 0 20px rgba(0,255,65,0.1);cursor:pointer;transition:background 0.2s,border-color 0.2s}
+.sheets-btn:hover{background:rgba(0,192,50,0.22);border-color:rgba(0,255,65,0.55)}
+@media(max-width:500px){
+  .sheets-drawer{bottom:calc(var(--bottomnav-h) + 60px + env(safe-area-inset-bottom,0px))}
+  .sheets-btn{font-size:10px;padding:0 14px;gap:6px}
+}
+
+/* ── PASSCODE MODAL ── */
+.pc-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:0 16px}
+.pc-overlay.open{display:flex}
+.pc-modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rm);padding:24px 22px 20px;width:min(310px,100%);display:flex;flex-direction:column;gap:13px;box-shadow:0 0 50px rgba(0,255,65,0.07);animation:fadeSlide 0.2s ease both}
+.pc-title{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.15em;color:var(--g0);text-transform:uppercase}
+.pc-sub{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.06em;line-height:1.5}
+.pc-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);font-family:var(--mono);font-size:16px;color:var(--text);padding:9px 12px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;letter-spacing:0.1em}
+.pc-input:focus{border-color:var(--g2);box-shadow:0 0 0 2px rgba(0,192,50,0.15)}
+.pc-input.shake{animation:shake 0.35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.pc-error{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:0.06em;min-height:13px}
+.pc-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:2px}
+.pc-btn-cancel{background:transparent;border:1px solid var(--border2);border-radius:var(--r);color:var(--text3);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;padding:7px 16px;cursor:pointer;transition:all 0.15s}
+.pc-btn-cancel:hover{border-color:var(--text2);color:var(--text)}
+.pc-btn-ok{background:var(--dim2);border:1px solid var(--g3);border-radius:var(--r);color:var(--g0);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.08em;padding:7px 20px;cursor:pointer;transition:all 0.15s}
+.pc-btn-ok:hover{background:var(--dim3);border-color:var(--g1)}
 </style>
 </head>
 <body>
@@ -248,7 +350,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
   <!-- TOPBAR -->
   <header class="topbar">
-
     <div class="logo">KBC<span>VEHICLES</span></div>
     <div class="topbar-mid">
       <div class="search-wrap">
@@ -321,25 +422,21 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
   <!-- MAIN -->
   <main class="main">
-
-    <!-- KPIs -->
     <div class="kpi-row">
-      <div class="kpi reveal reveal-d1"><div class="kpi-label">Total Vehicles</div><div class="kpi-num" id="k-total">—</div><div class="kpi-sub">Vehicles inventory</div><div class="kpi-corner">T</div></div>
-      <div class="kpi reveal reveal-d2"><div class="kpi-label">Registered</div><div class="kpi-num" id="k-reg">—</div><div class="kpi-sub"><b id="k-reg-pct">—</b> of vehicles</div><div class="kpi-corner">R</div></div>
-      <div class="kpi amber reveal reveal-d3"><div class="kpi-label">Active Loans</div><div class="kpi-num" id="k-loan">—</div><div class="kpi-sub">Ongoing payments</div><div class="kpi-corner">L</div></div>
-      <div class="kpi blue reveal reveal-d4"><div class="kpi-label">GPS Equipped</div><div class="kpi-num" id="k-gps">—</div><div class="kpi-sub">Tracked units</div><div class="kpi-corner">G</div></div>
+      <div class="kpi"><div class="kpi-label">Total Vehicles</div><div class="kpi-num" id="k-total">—</div><div class="kpi-sub">Vehicles inventory</div><div class="kpi-corner">T</div></div>
+      <div class="kpi"><div class="kpi-label">Registered</div><div class="kpi-num" id="k-reg">—</div><div class="kpi-sub"><b id="k-reg-pct">—</b> of vehicles</div><div class="kpi-corner">R</div></div>
+      <div class="kpi amber"><div class="kpi-label">Active Loans</div><div class="kpi-num" id="k-loan">—</div><div class="kpi-sub">Ongoing payments</div><div class="kpi-corner">L</div></div>
+      <div class="kpi blue"><div class="kpi-label">GPS Equipped</div><div class="kpi-num" id="k-gps">—</div><div class="kpi-sub">Tracked units</div><div class="kpi-corner">G</div></div>
     </div>
 
-    <!-- Mobile search (below KPI cards) -->
-    <div class="mobile-search reveal">
+    <div class="mobile-search">
       <div class="mobile-search-wrap">
         <svg class="mobile-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="search" id="search-mobile" placeholder="search vehicle / plate / owner…" oninput="onMobileSearch()"/>
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="reveal">
+    <div>
       <div class="sec-header">
         <span class="sec-title">Vehicle Registry</span>
         <div class="sec-controls">
@@ -355,17 +452,15 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       <div class="table-wrap" id="table-wrap">
         <div class="loader-wrap"><div class="spinner"></div><div class="loader-txt">CONNECTING TO GOOGLE SHEETS…</div></div>
       </div>
-      <!-- Mobile card list -->
       <div class="card-list" id="card-list"></div>
     </div>
 
-    <!-- Panels -->
     <div class="panels">
-      <div class="panel reveal reveal-d1">
+      <div class="panel">
         <div class="panel-head"><span class="panel-title">Vehicles Composition</span><span class="result-count" id="comp-total">—</span></div>
         <div class="panel-body" id="chart-panel"><div class="loader-txt" style="padding:20px 0;text-align:center">LOADING…</div></div>
       </div>
-      <div class="panel reveal reveal-d2">
+      <div class="panel">
         <div class="panel-head"><span class="panel-title">Active Loans</span><span class="result-count" id="loan-total">—</span></div>
         <div class="panel-body" id="loan-panel"><div class="loader-txt" style="padding:20px 0;text-align:center">LOADING…</div></div>
       </div>
@@ -393,265 +488,126 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   </button>
 </nav>
 
-<script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQUpSsw2Qxm9rOA_1j8TM6m0iKkljkdLMnUyEirhbv1DOu3caYA_LYZp-hcscoXNb/exec';
-
-let allVehicles = [];
-let activeType   = 'ALL';
-let activeStatus = 'ALL';
-
-/* ── SIDEBAR TOGGLE ── */
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('open');
-}
-function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
-function scrollToTable(){ document.getElementById('table-wrap').scrollIntoView({behavior:'smooth'}); }
-function onMobileSearch(){
-  const v = document.getElementById('search-mobile').value;
-  document.getElementById('search').value = v;
-  render();
-}
-
-/* ── FETCH ── */
-async function loadData() {
-  document.getElementById('live-status').style.display = 'flex';
-  document.getElementById('live-status').textContent = 'SYNCING';
-  document.getElementById('conn-label').classList.remove('visible');
-  document.getElementById('table-wrap').innerHTML = `<div class="loader-wrap"><div class="spinner"></div><div class="loader-txt">CONNECTING TO GOOGLE SHEETS…</div></div>`;
-  document.getElementById('card-list').innerHTML = '';
-
-  try {
-    const res = await fetch(APPS_SCRIPT_URL);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    if (!json.data || !Array.isArray(json.data)) throw new Error('Unexpected response from Apps Script');
-
-    allVehicles = json.data.map(normalise).filter(v => v.name);
-
-    buildFilters();
-    updateKPIs();
-    updatePanels();
-    render();
-
-    const now = new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    document.getElementById('live-status').style.display = 'none';
-    const cl = document.getElementById('conn-label');
-    cl.classList.add('visible');
-    document.getElementById('conn-sheet-name').textContent = 'SUMMARY_OF_VEHICLES';
-    document.getElementById('conn-sheet-tab').textContent  = 'Sheet1 · ' + allVehicles.length + ' rows';
-    document.getElementById('sidebar-time').textContent = 'LAST SYNC · ' + now;
-    document.getElementById('nb-total').textContent = allVehicles.length;
-    const dc = document.getElementById('ds-card');
-    dc.classList.add('visible');
-    document.getElementById('ds-name').textContent  = 'SUMMARY_OF_VEHICLES';
-    document.getElementById('ds-sheet').textContent = '📄 Sheet1 · ' + allVehicles.length + ' rows';
-
-  } catch(e) {
-    document.getElementById('table-wrap').innerHTML = `<div class="error-box">⚠ FETCH ERROR — ${e.message}<br><br>Check Apps Script deployment:<br><b>Execute as: Me | Who has access: Anyone</b></div>`;
-    document.getElementById('card-list').innerHTML = '';
-    document.getElementById('live-status').style.display = 'flex';
-    document.getElementById('live-status').textContent = 'ERROR';
-    console.error(e);
-  }
-}
-
-/* ── NORMALISE ── */
-// The sheet has TWO columns both named "STATUS":
-//   Col F = Registration STATUS  (REGISTERED / NOT REGISTERED / EXPIRED)
-//   Col J = Loan STATUS          (ON GOING / DONE)
-//
-// The NEW Apps Script renames them to REG_STATUS and LOAN_STATUS before
-// returning JSON, so there is no duplicate-key collision.
-// We also gracefully handle the old format (status / status_1) as fallback.
-function normalise(rawRow) {
-  const row = {};
-  Object.keys(rawRow).forEach(k => {
-    const nk = k.toLowerCase().trim().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
-    row[nk] = String(rawRow[k]||'').trim();
-  });
-  const get = (key, fb='') => (row[key]||fb).trim();
-  const bool = v => { const s=v.toLowerCase(); return s==='true'||s==='yes'||s==='1'; };
-
-  // REG_STATUS  = col F (registration)  — from new Apps Script
-  // LOAN_STATUS = col J (loan)          — from new Apps Script
-  // Fallback to old "status" / "status_1" keys if still using the old script
-  const regStatus  = (get('reg_status')  || get('status'  )).toUpperCase();
-  const loanStatus = (get('loan_status') || get('status_1')).toUpperCase();
-
-  const rawAmt   = get('amount');
-  const cleanAmt = rawAmt.replace(/[₱,\s]/g,'');
-
-  return {
-    type:       get('type').toUpperCase(),
-    name:       get('vehicle_name'),
-    plate:      get('plate_no'),
-    orcr:       bool(get('or_cr','0')),
-    from:       get('received_from'),
-    status:     regStatus,    // REG STATUS column  (col F)
-    loanStart:  get('start'),
-    loanEnd:    get('end'),
-    amount:     cleanAmt,
-    loanStatus: loanStatus,   // LOAN STATUS column (col J)
-    paid:       bool(get('fully_paid','0')),
-    gps:        bool(get('gps','0')),
-    rfid:       get('rfid'),
-  };
-}
-
-/* ── KPIs ── */
-function updateKPIs() {
-  const total = allVehicles.length;
-  // Registered = STATUS column value is "REGISTERED"
-  const reg   = allVehicles.filter(v => v.status === 'REGISTERED').length;
-  // Active loans = loan STATUS is "ON GOING" (not DONE / empty)
-  const loan  = allVehicles.filter(v => v.loanStatus.includes('ON GOING')).length;
-  // Not fully paid (fully_paid column is FALSE / empty / not yes)
-  const unpaid = allVehicles.filter(v => !v.paid && v.loanStatus.includes('ON GOING')).length;
-  const gps   = allVehicles.filter(v => v.gps).length;
-
-  animCount('k-total', total);
-  animCount('k-reg',   reg);
-  animCount('k-loan',  loan);
-  animCount('k-gps',   gps);
-
-  document.getElementById('k-reg-pct').textContent = total ? Math.round(reg/total*100)+'%' : '—';
-
-  // sidebar counts
-  document.getElementById('sf-all').textContent   = total;
-  document.getElementById('sf-reg').textContent   = reg;
-  document.getElementById('sf-noreg').textContent = allVehicles.filter(v=>v.status==='NOT REGISTERED').length;
-  document.getElementById('sf-exp').textContent   = allVehicles.filter(v=>v.status==='EXPIRED').length;
-}
-
-function animCount(id, target) {
-  const el = document.getElementById(id);
-  let cur = 0;
-  const step = Math.max(1, Math.ceil(target/20));
-  const t = setInterval(()=>{ cur=Math.min(cur+step,target); el.textContent=cur; if(cur>=target) clearInterval(t); }, 40);
-}
-
-/* ── FILTERS ── */
-function buildFilters() {
-  const types = ['ALL',...new Set(allVehicles.map(v=>v.type).filter(Boolean))];
-  document.getElementById('filter-group').innerHTML = types.map(t => {
-    const count = t==='ALL' ? allVehicles.length : allVehicles.filter(v=>v.type===t).length;
-    return `<button class="filter-btn${t===activeType?' active':''}" onclick="setTypeFilter('${t}',this)">${t==='ALL'?'ALL TYPES':t} <span class="fb-count">${count}</span></button>`;
-  }).join('');
-}
-function setTypeFilter(type,el){
-  activeType=type;
-  document.querySelectorAll('#filter-group .filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active'); render();
-  if(window.innerWidth<=900) toggleSidebar();
-}
-function setStatusFilter(status,el){
-  activeStatus=status;
-  document.querySelectorAll('#status-group .filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active'); render();
-  if(window.innerWidth<=900) toggleSidebar();
-}
-
-/* ── PANELS ── */
-function updatePanels() {
-  const types = [...new Set(allVehicles.map(v=>v.type).filter(Boolean))];
-  const max   = Math.max(...types.map(t=>allVehicles.filter(v=>v.type===t).length));
-  const colors = {PERSONAL:'#00D4FF','WING VAN':'#C87BFF',TRUCK:'#FF9500',TANKER:'#FFB300'};
-  document.getElementById('comp-total').textContent = allVehicles.length+' units';
-  document.getElementById('chart-panel').innerHTML = types.map(t => {
-    const count = allVehicles.filter(v=>v.type===t).length;
-    const pct   = Math.round(count/max*100);
-    const color = colors[t]||'#00FF41';
-    return `<div class="bar-row"><div class="bar-lbl">${t.toLowerCase()}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="bar-val">${count}</div></div>`;
-  }).join('');
-
-  const loans = allVehicles.filter(v=>v.loanStatus.includes('ON GOING'));
-  document.getElementById('loan-total').textContent = loans.length+' active';
-  document.getElementById('loan-panel').innerHTML = loans.length
-    ? loans.map(v=>`<div class="loan-item"><div><div class="loan-vname">${v.name}</div><div class="loan-from">${v.from||'—'}</div></div><div class="loan-amt">${v.amount?'₱'+Number(v.amount).toLocaleString():'—'}</div></div>`).join('')
-    : `<div style="text-align:center;padding:24px;font-family:var(--mono);font-size:10px;color:var(--text3)">NO ACTIVE LOANS</div>`;
-}
-
-/* ── RENDER ── */
-function render() {
-  const q      = (document.getElementById('search').value||'').toLowerCase();
-  const sortBy = document.getElementById('sort-sel').value;
-
-  let list = allVehicles.filter(v => {
-    if (activeType   !=='ALL' && v.type   !==activeType)   return false;
-    if (activeStatus !=='ALL' && v.status !==activeStatus) return false;
-    if (q && ![v.name,v.plate,v.from,v.type].join(' ').toLowerCase().includes(q)) return false;
-    return true;
-  });
-
-  list = [...list].sort((a,b)=>{
-    if(sortBy==='name')   return a.name.localeCompare(b.name);
-    if(sortBy==='type')   return a.type.localeCompare(b.type)||a.name.localeCompare(b.name);
-    if(sortBy==='status') return a.status.localeCompare(b.status);
-    if(sortBy==='loan')   return (b.loanStatus.includes('ON GOING')?1:0)-(a.loanStatus.includes('ON GOING')?1:0);
-    return 0;
-  });
-
-  document.getElementById('result-count').textContent = list.length+' records';
-
-  const typeClass = {PERSONAL:'tt-personal','WING VAN':'tt-wingvan',TRUCK:'tt-truck',TANKER:'tt-tanker'};
-  const sbClass = s=>{ const u=s.toUpperCase(); return u==='REGISTERED'?'sb-reg':u==='NOT REGISTERED'?'sb-noreg':u==='EXPIRED'?'sb-exp':'sb-none'; };
-  const sbLabel = s=>{ const u=s.toUpperCase(); return u==='REGISTERED'?'REG':u==='NOT REGISTERED'?'NOT REG':u==='EXPIRED'?'EXPIRED':s||'—'; };
-
-  /* Desktop table */
-  const rows = list.length
-    ? list.map(v=>`<tr>
-        <td><span class="tt ${typeClass[v.type]||'sb-none'}">${v.type||'—'}</span></td>
-        <td><div class="vname">${v.name||'—'}</div><div class="vfrom">${v.from||'—'}</div></td>
-        <td><span class="plate">${v.plate||'—'}</span></td>
-        <td><span class="sb ${sbClass(v.status)}">${sbLabel(v.status)}</span></td>
-        <td><span class="lb ${v.loanStatus.includes('ON GOING')?'lb-ongoing':'lb-done'}">${v.loanStatus.includes('ON GOING')?'ON GOING':v.loanStatus?'PAID':'—'}</span></td>
-        <td style="text-align:center"><span class="dot ${v.gps?'dot-on':'dot-off'}" title="${v.gps?'GPS Active':'No GPS'}"></span></td>
-        <td style="text-align:left"><span style="font-family:var(--mono);font-size:10px;color:var(--g2);letter-spacing:0.06em">${v.rfid?'RFID: '+v.rfid:'—'}</span></td>
-        <td style="text-align:center"><span class="dot ${v.paid?'dot-on':'dot-off'}" title="${v.paid?'Paid':'Unpaid'}"></span></td>
-      </tr>`).join('')
-    : `<tr class="empty-row"><td colspan="8">NO VEHICLES MATCH YOUR FILTERS</td></tr>`;
-
-  document.getElementById('table-wrap').innerHTML = `<table class="tbl">
-    <thead><tr>
-      <th>TYPE</th><th>VEHICLE · OWNER</th><th>PLATE</th><th>REG STATUS</th>
-      <th>LOAN</th><th style="text-align:center">GPS</th><th style="text-align:center">RFID</th><th style="text-align:center">PAID</th>
-    </tr></thead>
-    <tbody>${rows}</tbody>
-  </table>`;
-
-  /* Mobile card list */
-  document.getElementById('card-list').innerHTML = list.length
-    ? list.map(v=>`<div class="vcard">
-        <div class="vcard-top">
-          <div><div class="vcard-name">${v.name||'—'}</div><div class="vcard-from">${v.from||'—'}</div></div>
-          <span class="tt ${typeClass[v.type]||'sb-none'}">${v.type||'—'}</span>
+<!-- ══════════════════════════════════════
+     VEHICLE DETAIL MODAL
+══════════════════════════════════════ -->
+<div class="vmodal-overlay" id="vmodalOverlay" onclick="closeVModalOnOverlay(event)">
+  <div class="vmodal" id="vmodal">
+    <div class="vmodal-handle"></div>
+    <div class="vmodal-header">
+      <div class="vmodal-title-wrap">
+        <span class="vmodal-type-badge" id="vm-type">—</span>
+        <div>
+          <div class="vmodal-name" id="vm-name">—</div>
+          <div class="vmodal-from" id="vm-from">—</div>
         </div>
-        <div class="vcard-badges">
-          <span class="sb ${sbClass(v.status)}">${sbLabel(v.status)}</span>
-          <span class="lb ${v.loanStatus.includes('ON GOING')?'lb-ongoing':'lb-done'}">${v.loanStatus.includes('ON GOING')?'ON GOING':v.loanStatus?'PAID':'—'}</span>
+      </div>
+      <button class="vmodal-close" onclick="closeVModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="vmodal-body">
+      <!-- Plate + Reg Status -->
+      <div class="vmodal-row">
+        <div class="vmodal-field">
+          <div class="vmodal-flabel">PLATE NO.</div>
+          <div class="vmodal-fval plate" id="vm-plate">—</div>
         </div>
-        <div class="vcard-row">
-          <span class="vcard-plate">${v.plate||'—'}</span>
-          <div class="vcard-dots">
-            <div class="vcard-dot-item"><span class="dot ${v.gps?'dot-on':'dot-off'}"></span>GPS</div>
-            <div class="vcard-dot-item"><span style="font-family:var(--mono);font-size:9px;color:var(--g2);letter-spacing:0.05em">${v.rfid?'RFID: '+v.rfid:'NO RFID'}</span></div>
-            <div class="vcard-dot-item"><span class="dot ${v.paid?'dot-on':'dot-off'}"></span>PAID</div>
+        <div class="vmodal-field">
+          <div class="vmodal-flabel">REG STATUS</div>
+          <div class="vmodal-fval" id="vm-status">—</div>
+        </div>
+      </div>
+
+      <!-- GPS + Paid -->
+      <div class="vmodal-row">
+        <div class="vmodal-field">
+          <div class="vmodal-flabel">GPS</div>
+          <div class="vmodal-fval" id="vm-gps">—</div>
+        </div>
+        <div class="vmodal-field">
+          <div class="vmodal-flabel">FULLY PAID</div>
+          <div class="vmodal-fval" id="vm-paid">—</div>
+        </div>
+      </div>
+
+      <!-- RFID -->
+      <div class="vmodal-rfid-row" id="vm-rfid-row">
+        <div>
+          <div class="vmodal-flabel">RFID</div>
+          <div class="vmodal-fval vmodal-rfid-val" id="vm-rfid">—</div>
+        </div>
+        <button class="vmodal-copy-btn" id="vm-copy-btn" onclick="copyRFID()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="vm-copy-label">COPY</span>
+        </button>
+      </div>
+
+      <!-- Loan section (only when has loan) -->
+      <div class="vmodal-loan-section" id="vm-loan-section" style="display:none">
+        <div class="vmodal-section-title">
+          <span>LOAN DETAILS</span>
+          <span class="lb lb-ongoing" id="vm-loan-badge">ON GOING</span>
+        </div>
+
+        <!-- Loan dates -->
+        <div class="vmodal-row" style="padding:12px 12px 0">
+          <div class="vmodal-field">
+            <div class="vmodal-flabel">START DATE</div>
+            <div class="vmodal-fval" id="vm-start">—</div>
+          </div>
+          <div class="vmodal-field">
+            <div class="vmodal-flabel">END DATE</div>
+            <div class="vmodal-fval" id="vm-end">—</div>
           </div>
         </div>
-      </div>`).join('')
-    : `<div style="text-align:center;padding:40px;font-family:var(--mono);font-size:11px;color:var(--text3)">NO VEHICLES MATCH YOUR FILTERS</div>`;
-}
 
-loadData();
-</script>
+        <!-- Monthly + remaining -->
+        <div class="vmodal-row" style="padding:10px 12px 12px">
+          <div class="vmodal-field">
+            <div class="vmodal-flabel">MONTHLY AMOUNT</div>
+            <div class="vmodal-fval vmodal-amount" id="vm-amount">—</div>
+          </div>
+          <div class="vmodal-field">
+            <div class="vmodal-flabel">REMAINING MONTHS</div>
+            <div class="vmodal-fval" id="vm-months-inline" style="color:var(--amber);font-size:14px;font-weight:700">—</div>
+          </div>
+        </div>
+
+        <!-- Remaining months progress bar -->
+        <div class="vmodal-months-bar">
+          <div class="vmodal-flabel" style="margin-bottom:4px">LOAN PROGRESS</div>
+          <div class="vmodal-months-track"><div class="vmodal-months-fill" id="vm-months-fill" style="width:0%"></div></div>
+        </div>
+
+        <!-- Balance breakdown -->
+        <div class="vmodal-balance-box" id="vm-balance-box">
+          <div class="vb-row">
+            <span class="vb-label">Monthly Amount</span>
+            <span class="vb-val" id="vb-monthly">—</span>
+          </div>
+          <div class="vb-row">
+            <span class="vb-label">Remaining Months</span>
+            <span class="vb-val" id="vb-rem-months">—</span>
+          </div>
+          <div class="vb-divider"></div>
+          <div class="vb-row total">
+            <span class="vb-label">REMAINING BALANCE</span>
+            <span class="vb-val" id="vb-total">—</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /vmodal-body -->
+  </div><!-- /vmodal -->
+</div><!-- /vmodal-overlay -->
+
 <!-- SHEETS DRAWER -->
 <div class="sheets-drawer" id="sheetsDrawer">
-  <!-- Notch trigger -->
   <button class="sheets-notch" id="sheetsNotch" onclick="toggleSheetsDrawer()" aria-label="Toggle Sheets button">
     <svg class="notch-chevron" id="notchChevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
-  <!-- The actual button — triggers passcode first -->
   <button class="sheets-btn" onclick="openSheetsPasscode()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     Go to Sheets
@@ -677,52 +633,427 @@ loadData();
   </div>
 </div>
 
-<style>
-/* ── SHEETS DRAWER ── */
-.sheets-drawer{position:fixed;right:0;bottom:calc(var(--bottomnav-h) + 80px + env(safe-area-inset-bottom,0px));z-index:500;display:flex;align-items:center;transform:translateX(calc(100% - 22px));transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);will-change:transform;padding-right:env(safe-area-inset-right,0px)}
-.sheets-drawer.open{transform:translateX(0)}
-.sheets-notch{display:flex;align-items:center;justify-content:center;width:22px;height:52px;background:rgba(0,192,50,0.14);border:1px solid rgba(0,255,65,0.35);border-right:none;border-radius:8px 0 0 8px;cursor:pointer;color:var(--g1);flex-shrink:0;transition:background 0.2s;-webkit-tap-highlight-color:transparent;padding:0}
-.sheets-notch:hover{background:rgba(0,192,50,0.26)}
-.sheets-notch:active{background:rgba(0,192,50,0.35)}
-.notch-chevron{width:14px;height:14px;flex-shrink:0;transition:transform 0.35s cubic-bezier(0.22,1,0.36,1)}
-.sheets-drawer.open .notch-chevron{transform:rotate(180deg)}
-.sheets-btn{display:flex;align-items:center;gap:8px;padding:0 18px;height:52px;background:rgba(0,192,50,0.12);border:1px solid rgba(0,255,65,0.35);border-left:none;border-radius:0 8px 8px 0;color:var(--g0);font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:4px 0 20px rgba(0,255,65,0.1);cursor:pointer;transition:background 0.2s,border-color 0.2s}
-.sheets-btn:hover{background:rgba(0,192,50,0.22);border-color:rgba(0,255,65,0.55)}
-.sheets-btn:active{background:rgba(0,192,50,0.32)}
-@media(max-width:500px){
-  .sheets-drawer{bottom:calc(var(--bottomnav-h) + 60px + env(safe-area-inset-bottom,0px))}
-  .sheets-btn{font-size:10px;padding:0 14px;gap:6px}
-}
-
-/* ── PASSCODE MODAL ── */
-.pc-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:0 16px}
-.pc-overlay.open{display:flex}
-.pc-modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rm);padding:24px 22px 20px;width:min(310px,100%);display:flex;flex-direction:column;gap:13px;box-shadow:0 0 50px rgba(0,255,65,0.07);animation:fadeSlide 0.2s ease both}
-.pc-title{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.15em;color:var(--g0);text-transform:uppercase}
-.pc-sub{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.06em;line-height:1.5}
-.pc-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);font-family:var(--mono);font-size:16px;color:var(--text);padding:9px 12px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;letter-spacing:0.1em}
-.pc-input:focus{border-color:var(--g2);box-shadow:0 0 0 2px rgba(0,192,50,0.15)}
-.pc-input.shake{animation:shake 0.35s ease}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-.pc-error{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:0.06em;min-height:13px}
-.pc-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:2px}
-.pc-btn-cancel{background:transparent;border:1px solid var(--border2);border-radius:var(--r);color:var(--text3);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;padding:7px 16px;cursor:pointer;transition:all 0.15s}
-.pc-btn-cancel:hover{border-color:var(--text2);color:var(--text)}
-.pc-btn-ok{background:var(--dim2);border:1px solid var(--g3);border-radius:var(--r);color:var(--g0);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.08em;padding:7px 20px;cursor:pointer;transition:all 0.15s}
-.pc-btn-ok:hover{background:var(--dim3);border-color:var(--g1)}
-</style>
-
 <script>
-const SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1zvxVFXHSdMVGGBhulqKIqoeW3r15GQkBte5nbzel9ZQ/edit?usp=sharing';
-const SHEETS_PASS = 'kbc777@';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQUpSsw2Qxm9rOA_1j8TM6m0iKkljkdLMnUyEirhbv1DOu3caYA_LYZp-hcscoXNb/exec';
+const SHEETS_URL      = 'https://docs.google.com/spreadsheets/d/1zvxVFXHSdMVGGBhulqKIqoeW3r15GQkBte5nbzel9ZQ/edit?usp=sharing';
+const SHEETS_PASS     = 'kbc777@';
 
-function toggleSheetsDrawer(){
-  document.getElementById('sheetsDrawer').classList.toggle('open');
+let allVehicles  = [];
+let activeType   = 'ALL';
+let activeStatus = 'ALL';
+let currentVehicleRFID = '';
+
+/* ── HELPERS ── */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
 }
+function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+function scrollToTable(){ document.getElementById('table-wrap').scrollIntoView({behavior:'smooth'}); }
+function onMobileSearch(){
+  document.getElementById('search').value = document.getElementById('search-mobile').value;
+  render();
+}
+
+/* ── FETCH ── */
+async function loadData(){
+  document.getElementById('live-status').style.display = 'flex';
+  document.getElementById('live-status').textContent = 'SYNCING';
+  document.getElementById('conn-label').classList.remove('visible');
+  document.getElementById('table-wrap').innerHTML = `<div class="loader-wrap"><div class="spinner"></div><div class="loader-txt">CONNECTING TO GOOGLE SHEETS…</div></div>`;
+  document.getElementById('card-list').innerHTML = '';
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if(!json.data || !Array.isArray(json.data)) throw new Error('Unexpected response from Apps Script');
+
+    allVehicles = json.data.map(normalise).filter(v => v.name);
+    buildFilters(); updateKPIs(); updatePanels(); render();
+
+    const now = new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('live-status').style.display = 'none';
+    const cl = document.getElementById('conn-label');
+    cl.classList.add('visible');
+    document.getElementById('conn-sheet-name').textContent = 'SUMMARY_OF_VEHICLES';
+    document.getElementById('conn-sheet-tab').textContent  = 'Sheet1 · ' + allVehicles.length + ' rows';
+    document.getElementById('sidebar-time').textContent    = 'LAST SYNC · ' + now;
+    document.getElementById('nb-total').textContent        = allVehicles.length;
+    const dc = document.getElementById('ds-card');
+    dc.classList.add('visible');
+    document.getElementById('ds-name').textContent  = 'SUMMARY_OF_VEHICLES';
+    document.getElementById('ds-sheet').textContent = '📄 Sheet1 · ' + allVehicles.length + ' rows';
+
+  } catch(e) {
+    document.getElementById('table-wrap').innerHTML = `<div class="error-box">⚠ FETCH ERROR — ${e.message}<br><br>Check Apps Script deployment:<br><b>Execute as: Me | Who has access: Anyone</b></div>`;
+    document.getElementById('card-list').innerHTML = '';
+    document.getElementById('live-status').style.display = 'flex';
+    document.getElementById('live-status').textContent = 'ERROR';
+    console.error(e);
+  }
+}
+
+/* ── NORMALISE ── */
+function normalise(rawRow){
+  const row = {};
+  Object.keys(rawRow).forEach(k => {
+    const nk = k.toLowerCase().trim().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
+    row[nk] = String(rawRow[k]||'').trim();
+  });
+  const get  = (key,fb='') => (row[key]||fb).trim();
+  const bool = v => { const s=v.toLowerCase(); return s==='true'||s==='yes'||s==='1'; };
+
+  const regStatus  = (get('reg_status')  || get('status'  )).toUpperCase();
+  const loanStatus = (get('loan_status') || get('status_1')).toUpperCase();
+  const rawAmt     = get('amount');
+  const cleanAmt   = rawAmt.replace(/[₱,\s]/g,'');
+
+  return {
+    type:            get('type').toUpperCase(),
+    name:            get('vehicle_name'),
+    plate:           get('plate_no'),
+    orcr:            bool(get('or_cr','0')),
+    from:            get('received_from'),
+    status:          regStatus,
+    loanStart:       get('start'),
+    loanEnd:         get('end'),
+    amount:          cleanAmt,
+    loanStatus:      loanStatus,
+    paid:            bool(get('fully_paid','0')),
+    gps:             bool(get('gps','0')),
+    rfid:            get('rfid'),
+    remainingMonths: get('remaining_months'),
+  };
+}
+
+/* ── KPIs ── */
+function updateKPIs(){
+  const total  = allVehicles.length;
+  const reg    = allVehicles.filter(v=>v.status==='REGISTERED').length;
+  const loan   = allVehicles.filter(v=>v.loanStatus.includes('ON GOING')).length;
+  const gps    = allVehicles.filter(v=>v.gps).length;
+
+  animCount('k-total',total); animCount('k-reg',reg);
+  animCount('k-loan',loan);   animCount('k-gps',gps);
+
+  document.getElementById('k-reg-pct').textContent = total ? Math.round(reg/total*100)+'%' : '—';
+  document.getElementById('sf-all').textContent    = total;
+  document.getElementById('sf-reg').textContent    = reg;
+  document.getElementById('sf-noreg').textContent  = allVehicles.filter(v=>v.status==='NOT REGISTERED').length;
+  document.getElementById('sf-exp').textContent    = allVehicles.filter(v=>v.status==='EXPIRED').length;
+}
+
+function animCount(id,target){
+  const el=document.getElementById(id); let cur=0;
+  const step=Math.max(1,Math.ceil(target/20));
+  const t=setInterval(()=>{ cur=Math.min(cur+step,target); el.textContent=cur; if(cur>=target)clearInterval(t); },40);
+}
+
+/* ── FILTERS ── */
+function buildFilters(){
+  const types=['ALL',...new Set(allVehicles.map(v=>v.type).filter(Boolean))];
+  document.getElementById('filter-group').innerHTML=types.map(t=>{
+    const count=t==='ALL'?allVehicles.length:allVehicles.filter(v=>v.type===t).length;
+    return `<button class="filter-btn${t===activeType?' active':''}" onclick="setTypeFilter('${t}',this)">${t==='ALL'?'ALL TYPES':t} <span class="fb-count">${count}</span></button>`;
+  }).join('');
+}
+function setTypeFilter(type,el){
+  activeType=type;
+  document.querySelectorAll('#filter-group .filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); render();
+  if(window.innerWidth<=900) toggleSidebar();
+}
+function setStatusFilter(status,el){
+  activeStatus=status;
+  document.querySelectorAll('#status-group .filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); render();
+  if(window.innerWidth<=900) toggleSidebar();
+}
+
+/* ── PANELS ── */
+function updatePanels(){
+  const types=[...new Set(allVehicles.map(v=>v.type).filter(Boolean))];
+  const max=Math.max(...types.map(t=>allVehicles.filter(v=>v.type===t).length));
+  const colors={PERSONAL:'#00D4FF','WING VAN':'#C87BFF',TRUCK:'#FF9500',TANKER:'#FFB300'};
+  document.getElementById('comp-total').textContent=allVehicles.length+' units';
+  document.getElementById('chart-panel').innerHTML=types.map(t=>{
+    const count=allVehicles.filter(v=>v.type===t).length;
+    const pct=Math.round(count/max*100);
+    const color=colors[t]||'#00FF41';
+    return `<div class="bar-row"><div class="bar-lbl">${t.toLowerCase()}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="bar-val">${count}</div></div>`;
+  }).join('');
+
+  const loans=allVehicles.filter(v=>v.loanStatus.includes('ON GOING'));
+  document.getElementById('loan-total').textContent=loans.length+' active';
+  document.getElementById('loan-panel').innerHTML=loans.length
+    ? loans.map(v=>{
+        const amt   = v.amount ? '₱'+Number(v.amount).toLocaleString()+' / month' : '—';
+        const remMo = v.remainingMonths ? v.remainingMonths+' months left' : '';
+        const idx   = allVehicles.indexOf(v);
+        return `<div class="loan-item" onclick="openVModal(${idx})">
+          <div><div class="loan-vname">${v.name}</div><div class="loan-from">${v.from||'—'}</div></div>
+          <div style="text-align:right">
+            <div class="loan-amt">${amt}</div>
+            ${remMo?`<div style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:2px">${remMo}</div>`:''}
+          </div>
+        </div>`;
+      }).join('')
+    : `<div style="text-align:center;padding:24px;font-family:var(--mono);font-size:10px;color:var(--text3)">NO ACTIVE LOANS</div>`;
+}
+
+/* ── RENDER ── */
+function render(){
+  const q      = (document.getElementById('search').value||'').toLowerCase();
+  const sortBy = document.getElementById('sort-sel').value;
+  const typeClass = {PERSONAL:'tt-personal','WING VAN':'tt-wingvan',TRUCK:'tt-truck',TANKER:'tt-tanker'};
+
+  const sbClass = s=>{ const u=s.toUpperCase(); return u==='REGISTERED'?'sb-reg':u==='NOT REGISTERED'?'sb-noreg':u==='EXPIRED'?'sb-exp':'sb-none'; };
+  const sbLabel = s=>{ const u=s.toUpperCase(); return u==='REGISTERED'?'REG':u==='NOT REGISTERED'?'NOT REG':u==='EXPIRED'?'EXPIRED':s||'—'; };
+
+  let list=allVehicles.filter(v=>{
+    if(activeType  !=='ALL' && v.type  !==activeType)   return false;
+    if(activeStatus!=='ALL' && v.status!==activeStatus) return false;
+    if(q && ![v.name,v.plate,v.from,v.type].join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  list=[...list].sort((a,b)=>{
+    if(sortBy==='name')   return a.name.localeCompare(b.name);
+    if(sortBy==='type')   return a.type.localeCompare(b.type)||a.name.localeCompare(b.name);
+    if(sortBy==='status') return a.status.localeCompare(b.status);
+    if(sortBy==='loan')   return (b.loanStatus.includes('ON GOING')?1:0)-(a.loanStatus.includes('ON GOING')?1:0);
+    return 0;
+  });
+
+  document.getElementById('result-count').textContent=list.length+' records';
+
+  /* Desktop table */
+  const rows=list.length
+    ? list.map(v=>{
+        const idx=allVehicles.indexOf(v);
+        return `<tr onclick="openVModal(${idx})" title="Click to view details">
+          <td><span class="tt ${typeClass[v.type]||'sb-none'}">${v.type||'—'}</span></td>
+          <td><div class="vname">${v.name||'—'}</div><div class="vfrom">${v.from||'—'}</div></td>
+          <td><span class="plate">${v.plate||'—'}</span></td>
+          <td><span class="sb ${sbClass(v.status)}">${sbLabel(v.status)}</span></td>
+          <td><span class="lb ${v.loanStatus.includes('ON GOING')?'lb-ongoing':'lb-done'}">${v.loanStatus.includes('ON GOING')?'ON GOING':v.loanStatus?'PAID':'—'}</span></td>
+          <td style="text-align:center"><span class="dot ${v.gps?'dot-on':'dot-off'}" title="${v.gps?'GPS Active':'No GPS'}"></span></td>
+          <td style="text-align:left"><span style="font-family:var(--mono);font-size:10px;color:var(--g2);letter-spacing:0.06em">${v.rfid?'RFID: '+v.rfid:'—'}</span></td>
+          <td style="text-align:center"><span class="dot ${v.paid?'dot-on':'dot-off'}" title="${v.paid?'Paid':'Unpaid'}"></span></td>
+        </tr>`;
+      }).join('')
+    : `<tr class="empty-row"><td colspan="8">NO VEHICLES MATCH YOUR FILTERS</td></tr>`;
+
+  document.getElementById('table-wrap').innerHTML=`<table class="tbl">
+    <thead><tr>
+      <th>TYPE</th><th>VEHICLE · OWNER</th><th>PLATE</th><th>REG STATUS</th>
+      <th>LOAN</th><th style="text-align:center">GPS</th><th>RFID</th><th style="text-align:center">PAID</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+
+  /* Mobile card list */
+  document.getElementById('card-list').innerHTML=list.length
+    ? list.map(v=>{
+        const idx=allVehicles.indexOf(v);
+        return `<div class="vcard" onclick="openVModal(${idx})">
+          <div class="vcard-top">
+            <div><div class="vcard-name">${v.name||'—'}</div><div class="vcard-from">${v.from||'—'}</div></div>
+            <span class="tt ${typeClass[v.type]||'sb-none'}">${v.type||'—'}</span>
+          </div>
+          <div class="vcard-badges">
+            <span class="sb ${sbClass(v.status)}">${sbLabel(v.status)}</span>
+            <span class="lb ${v.loanStatus.includes('ON GOING')?'lb-ongoing':'lb-done'}">${v.loanStatus.includes('ON GOING')?'ON GOING':v.loanStatus?'PAID':'—'}</span>
+          </div>
+          <div class="vcard-row">
+            <span class="vcard-plate">${v.plate||'—'}</span>
+            <div class="vcard-dots">
+              <div class="vcard-dot-item"><span class="dot ${v.gps?'dot-on':'dot-off'}"></span>GPS</div>
+              <div class="vcard-dot-item"><span style="font-family:var(--mono);font-size:9px;color:var(--g2)">${v.rfid?'RFID: '+v.rfid:'NO RFID'}</span></div>
+              <div class="vcard-dot-item"><span class="dot ${v.paid?'dot-on':'dot-off'}"></span>PAID</div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')
+    : `<div style="text-align:center;padding:40px;font-family:var(--mono);font-size:11px;color:var(--text3)">NO VEHICLES MATCH YOUR FILTERS</div>`;
+}
+
+/* ══════════════════════════════════════
+   VEHICLE DETAIL MODAL LOGIC
+══════════════════════════════════════ */
+const typeClass = {PERSONAL:'tt-personal','WING VAN':'tt-wingvan',TRUCK:'tt-truck',TANKER:'tt-tanker'};
+
+function sbClass(s){ const u=s.toUpperCase(); return u==='REGISTERED'?'sb-reg':u==='NOT REGISTERED'?'sb-noreg':u==='EXPIRED'?'sb-exp':'sb-none'; }
+function sbLabel(s){ const u=s.toUpperCase(); return u==='REGISTERED'?'REGISTERED':u==='NOT REGISTERED'?'NOT REGISTERED':u==='EXPIRED'?'EXPIRED':s||'—'; }
+
+function openVModal(idx){
+  const v = allVehicles[idx];
+  if(!v) return;
+
+  /* Header */
+  const typeBadge = document.getElementById('vm-type');
+  typeBadge.textContent  = v.type||'—';
+  typeBadge.className    = 'vmodal-type-badge tt '+(typeClass[v.type]||'sb-none');
+  document.getElementById('vm-name').textContent = v.name||'—';
+  document.getElementById('vm-from').textContent = v.from || '—';
+
+  /* Basic fields */
+  document.getElementById('vm-plate').textContent = v.plate||'—';
+
+  const statusEl = document.getElementById('vm-status');
+  statusEl.innerHTML = `<span class="sb ${sbClass(v.status)}">${sbLabel(v.status)}</span>`;
+
+  document.getElementById('vm-gps').innerHTML  = v.gps
+    ? `<span style="color:var(--g0);display:flex;align-items:center;gap:5px"><span class="dot dot-on"></span>ACTIVE</span>`
+    : `<span style="color:var(--text3);display:flex;align-items:center;gap:5px"><span class="dot dot-off"></span>NONE</span>`;
+
+  document.getElementById('vm-paid').innerHTML = v.paid
+    ? `<span style="color:var(--g0)">✓ YES</span>`
+    : `<span style="color:var(--amber)">✗ NO</span>`;
+
+  /* RFID */
+  const rfidRow = document.getElementById('vm-rfid-row');
+  if(v.rfid){
+    document.getElementById('vm-rfid').textContent = v.rfid;
+    currentVehicleRFID = v.rfid;
+    rfidRow.style.display = 'flex';
+    const copyBtn = document.getElementById('vm-copy-btn');
+    copyBtn.classList.remove('copied');
+    document.getElementById('vm-copy-label').textContent = 'COPY';
+  } else {
+    rfidRow.style.display = 'none';
+    currentVehicleRFID   = '';
+  }
+
+  /* Loan section */
+  const loanSection = document.getElementById('vm-loan-section');
+  const hasLoan     = v.loanStatus && (v.loanStatus.includes('ON GOING') || v.loanStatus==='DONE' || v.loanStatus==='PAID');
+
+  if(hasLoan){
+    loanSection.style.display = 'block';
+
+    /* badge */
+    const loanBadge = document.getElementById('vm-loan-badge');
+    if(v.loanStatus.includes('ON GOING')){
+      loanBadge.className   = 'lb lb-ongoing';
+      loanBadge.textContent = 'ON GOING';
+    } else {
+      loanBadge.className   = 'lb lb-done';
+      loanBadge.textContent = 'PAID';
+    }
+
+    document.getElementById('vm-start').textContent = v.loanStart||'—';
+    document.getElementById('vm-end').textContent   = v.loanEnd  ||'—';
+
+    const monthlyAmt = v.amount ? Number(v.amount) : 0;
+    document.getElementById('vm-amount').textContent = monthlyAmt ? '₱'+monthlyAmt.toLocaleString() : '—';
+
+    const remMonths = v.remainingMonths ? parseInt(v.remainingMonths,10) : 0;
+    document.getElementById('vm-months-inline').textContent = remMonths ? remMonths+' months' : (v.loanStatus.includes('ON GOING') ? 'Ongoing' : 'Completed');
+
+    /* Progress bar: estimate total months from start → end if possible */
+    let progressPct = 0;
+    if(v.loanStart && v.loanEnd){
+      const start = new Date(v.loanStart);
+      const end   = new Date(v.loanEnd);
+      if(!isNaN(start) && !isNaN(end) && end > start){
+        const totalMonths = (end.getFullYear()-start.getFullYear())*12+(end.getMonth()-start.getMonth());
+        const elapsed     = totalMonths - remMonths;
+        progressPct       = Math.max(0,Math.min(100, Math.round(elapsed/totalMonths*100)));
+      }
+    } else if(remMonths===0){
+      progressPct = 100;
+    }
+    setTimeout(()=>{ document.getElementById('vm-months-fill').style.width = progressPct+'%'; }, 60);
+
+    /* Balance breakdown */
+    const balanceBox = document.getElementById('vm-balance-box');
+    if(monthlyAmt && remMonths){
+      const totalBalance = monthlyAmt * remMonths;
+      document.getElementById('vb-monthly').textContent    = '₱'+monthlyAmt.toLocaleString();
+      document.getElementById('vb-rem-months').textContent = remMonths+' months';
+      document.getElementById('vb-total').textContent      = '₱'+totalBalance.toLocaleString();
+      balanceBox.style.display = 'flex';
+    } else if(monthlyAmt && !remMonths && v.loanStatus.includes('ON GOING')){
+      /* No remaining months data — still show monthly */
+      document.getElementById('vb-monthly').textContent    = '₱'+monthlyAmt.toLocaleString();
+      document.getElementById('vb-rem-months').textContent = 'N/A';
+      document.getElementById('vb-total').textContent      = 'N/A';
+      balanceBox.style.display = 'flex';
+    } else {
+      balanceBox.style.display = 'none';
+    }
+  } else {
+    loanSection.style.display = 'none';
+  }
+
+  /* Open modal */
+  const overlay = document.getElementById('vmodalOverlay');
+  overlay.classList.add('open');
+  /* tiny rAF so display:flex is painted before opacity transition fires */
+  requestAnimationFrame(()=> requestAnimationFrame(()=> overlay.classList.add('is-visible')));
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVModal(){
+  const overlay = document.getElementById('vmodalOverlay');
+  overlay.classList.remove('is-visible');
+  /* wait for transition to finish before hiding */
+  overlay.addEventListener('transitionend', function handler(e){
+    if(e.target !== overlay) return;
+    overlay.classList.remove('open');
+    overlay.removeEventListener('transitionend', handler);
+    /* reset for clean re-open */
+    document.getElementById('vm-months-fill').style.width = '0%';
+  });
+  document.body.style.overflow = '';
+}
+
+function closeVModalOnOverlay(e){
+  if(e.target===document.getElementById('vmodalOverlay')) closeVModal();
+}
+
+/* RFID copy */
+function copyRFID(){
+  if(!currentVehicleRFID) return;
+  navigator.clipboard.writeText(currentVehicleRFID).then(()=>{
+    const btn   = document.getElementById('vm-copy-btn');
+    const label = document.getElementById('vm-copy-label');
+    btn.classList.add('copied');
+    label.textContent = 'COPIED!';
+    setTimeout(()=>{
+      btn.classList.remove('copied');
+      label.textContent = 'COPY';
+    }, 2000);
+  }).catch(()=>{
+    /* fallback for older browsers */
+    const ta = document.createElement('textarea');
+    ta.value = currentVehicleRFID;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const label = document.getElementById('vm-copy-label');
+    label.textContent = 'COPIED!';
+    setTimeout(()=>{ label.textContent = 'COPY'; }, 2000);
+  });
+}
+
+/* Escape key closes modal */
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape'){
+    closeVModal();
+    closePcModal();
+  }
+});
+
+/* ── SHEETS DRAWER ── */
+function toggleSheetsDrawer(){ document.getElementById('sheetsDrawer').classList.toggle('open'); }
 function openSheetsPasscode(){
-  const el = document.getElementById('pcOverlay');
+  const el=document.getElementById('pcOverlay');
   el.classList.add('open');
-  setTimeout(()=>{ document.getElementById('pcInput').focus(); }, 80);
+  setTimeout(()=>{ document.getElementById('pcInput').focus(); },80);
 }
 function closePcModal(){
   document.getElementById('pcOverlay').classList.remove('open');
@@ -730,86 +1061,23 @@ function closePcModal(){
   document.getElementById('pcError').textContent='';
   document.getElementById('pcInput').classList.remove('shake');
 }
-function closePcOverlay(e){
-  if(e.target===document.getElementById('pcOverlay')) closePcModal();
-}
+function closePcOverlay(e){ if(e.target===document.getElementById('pcOverlay')) closePcModal(); }
 function pcClearError(){
   document.getElementById('pcError').textContent='';
   document.getElementById('pcInput').classList.remove('shake');
 }
 function pcSubmit(){
-  const val = document.getElementById('pcInput').value;
-  if(val === SHEETS_PASS){
-    closePcModal();
-    window.open(SHEETS_URL,'_blank');
-  } else {
+  const val=document.getElementById('pcInput').value;
+  if(val===SHEETS_PASS){ closePcModal(); window.open(SHEETS_URL,'_blank'); }
+  else {
     document.getElementById('pcError').textContent='⚠ INCORRECT PASSCODE';
-    const inp = document.getElementById('pcInput');
-    inp.classList.remove('shake');
-    void inp.offsetWidth;
-    inp.classList.add('shake');
-    inp.value='';
-    setTimeout(()=>inp.focus(),50);
+    const inp=document.getElementById('pcInput');
+    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
+    inp.value=''; setTimeout(()=>inp.focus(),50);
   }
 }
+
+loadData();
 </script>
-
-<!-- SCROLL REVEAL OBSERVER -->
-<script>
-(function(){
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.classList.add('revealed');
-        io.unobserve(e.target);
-      }
-    });
-  },{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
-
-  function observe(){
-    document.querySelectorAll('.reveal,.reveal-left').forEach(el=>{
-      // Only observe if not already revealed
-      if(!el.classList.contains('revealed')) io.observe(el);
-    });
-  }
-
-  // Initial pass after DOM is ready
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', observe);
-  } else {
-    // Small delay so elements aren't all in-view on first paint at once
-    setTimeout(observe, 60);
-  }
-
-  // Re-observe after dynamic content like card list renders
-  const cardList = document.getElementById('card-list');
-  if(cardList){
-    new MutationObserver(()=>{
-      cardList.querySelectorAll('.vcard').forEach((el,i)=>{
-        if(!el.classList.contains('reveal')){
-          el.classList.add('reveal');
-          el.style.transitionDelay = (i * 0.055)+'s';
-        }
-        if(!el.classList.contains('revealed')) io.observe(el);
-      });
-    }).observe(cardList,{childList:true});
-  }
-
-  // Also re-scan when table-wrap updates (desktop rows fade in)
-  const tableWrap = document.getElementById('table-wrap');
-  if(tableWrap){
-    new MutationObserver(()=>{
-      tableWrap.querySelectorAll('tbody tr').forEach((el,i)=>{
-        if(!el.classList.contains('reveal')){
-          el.classList.add('reveal');
-          el.style.transitionDelay = Math.min(i * 0.03, 0.4)+'s';
-        }
-        if(!el.classList.contains('revealed')) io.observe(el);
-      });
-    }).observe(tableWrap,{childList:true,subtree:true});
-  }
-})();
-</script>
-
 </body>
 </html>
