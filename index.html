@@ -93,7 +93,11 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 /* ── KPI ── */
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--rm);padding:16px 18px 14px;position:relative;overflow:hidden;transition:border-color 0.2s}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--rm);padding:16px 18px 14px;position:relative;overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s;cursor:pointer;user-select:none;-webkit-user-select:none}
+.kpi:hover{border-color:var(--border2);box-shadow:0 0 0 1px var(--border2)}
+.kpi.kpi-active{border-color:var(--g1);box-shadow:0 0 0 2px rgba(0,255,65,0.2)}
+.kpi.amber.kpi-active{border-color:var(--amber);box-shadow:0 0 0 2px rgba(255,179,0,0.2)}
+.kpi.blue.kpi-active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(0,212,255,0.2)}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g2),transparent)}
 .kpi:hover{border-color:var(--border2)}
 .kpi-label{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
@@ -202,10 +206,10 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 @media(max-width:900px){
   /* topbar is fixed so shell doesn't reserve space for it */
   .shell{display:block;min-height:100vh}
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:calc(var(--topbar-h) + var(--sat))}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--topbar-h);padding-top:0}
   .sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;z-index:160;transform:translateX(-100%);padding-top:calc(var(--topbar-h) + 16px)}
   .sidebar.open{transform:translateX(0)}
-  .main{display:flex;flex-direction:column;gap:16px;padding:14px;padding-top:calc(var(--topbar-h) + var(--sat) + 14px);padding-bottom:calc(var(--bottomnav-h) + var(--sab) + 20px);min-height:100vh}
+  .main{display:flex;flex-direction:column;gap:16px;padding:14px;padding-top:calc(var(--topbar-h) + 10px);padding-bottom:calc(var(--bottomnav-h) + var(--sab) + 20px);min-height:100vh}
   .kpi-row{grid-template-columns:repeat(2,1fr);gap:8px}
   .panels{grid-template-columns:1fr}
   .bottom-nav{display:flex}
@@ -425,10 +429,10 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <!-- MAIN -->
   <main class="main">
     <div class="kpi-row">
-      <div class="kpi"><div class="kpi-label">Total Vehicles</div><div class="kpi-num" id="k-total">—</div><div class="kpi-sub">Vehicles inventory</div><div class="kpi-corner">T</div></div>
-      <div class="kpi"><div class="kpi-label">Registered</div><div class="kpi-num" id="k-reg">—</div><div class="kpi-sub"><b id="k-reg-pct">—</b> of vehicles</div><div class="kpi-corner">R</div></div>
-      <div class="kpi amber"><div class="kpi-label">Active Loans</div><div class="kpi-num" id="k-loan">—</div><div class="kpi-sub">Ongoing payments</div><div class="kpi-corner">L</div></div>
-      <div class="kpi blue"><div class="kpi-label">GPS Equipped</div><div class="kpi-num" id="k-gps">—</div><div class="kpi-sub">Tracked units</div><div class="kpi-corner">G</div></div>
+      <div class="kpi kpi-active" data-kpi="all" onclick="setKpiFilter('all',this)"><div class="kpi-label">Total Vehicles</div><div class="kpi-num" id="k-total">—</div><div class="kpi-sub">Vehicles inventory</div><div class="kpi-corner">T</div></div>
+      <div class="kpi" data-kpi="registered" onclick="setKpiFilter('registered',this)"><div class="kpi-label">Registered</div><div class="kpi-num" id="k-reg">—</div><div class="kpi-sub"><b id="k-reg-pct">—</b> of vehicles</div><div class="kpi-corner">R</div></div>
+      <div class="kpi amber" data-kpi="loan" onclick="setKpiFilter('loan',this)"><div class="kpi-label">Active Loans</div><div class="kpi-num" id="k-loan">—</div><div class="kpi-sub">Ongoing payments</div><div class="kpi-corner">L</div></div>
+      <div class="kpi blue" data-kpi="gps" onclick="setKpiFilter('gps',this)"><div class="kpi-label">GPS Equipped</div><div class="kpi-num" id="k-gps">—</div><div class="kpi-sub">Tracked units</div><div class="kpi-corner">G</div></div>
     </div>
 
     <div class="mobile-search">
@@ -440,7 +444,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
     <div>
       <div class="sec-header">
-        <span class="sec-title">Vehicle Registry</span>
+        <span class="sec-title">Vehicle Registry<span id="kpi-filter-label" style="font-size:9px;font-weight:500;font-family:var(--mono);color:var(--text3);letter-spacing:0.1em;padding:2px 6px;border-radius:2px;background:var(--dim);border:1px solid var(--border);display:none;margin-left:6px"></span></span>
         <div class="sec-controls">
           <span class="result-count" id="result-count">—</span>
           <select class="sort-sel" id="sort-sel" onchange="render()">
@@ -643,9 +647,25 @@ const SHEETS_PASS     = 'kbc777@';
 let allVehicles  = [];
 let activeType   = 'ALL';
 let activeStatus = 'ALL';
+let activeKpi    = 'all';  // all | registered | loan | gps
 let currentVehicleRFID = '';
 
 /* ── HELPERS ── */
+function setKpiFilter(kpi, el){
+  activeKpi = kpi;
+  // Update active class on KPI cards
+  document.querySelectorAll('.kpi').forEach(k => k.classList.remove('kpi-active'));
+  if(el) el.classList.add('kpi-active');
+  // Reset other filters when switching KPI for clarity
+  if(kpi !== 'all'){
+    activeType   = 'ALL';
+    activeStatus = 'ALL';
+    // Sync sidebar filter buttons back to ALL
+    document.querySelectorAll('#filter-group .filter-btn').forEach((b,i)=>{ if(i===0) b.classList.add('active'); else b.classList.remove('active'); });
+    document.querySelectorAll('#status-group .filter-btn').forEach((b,i)=>{ if(i===0) b.classList.add('active'); else b.classList.remove('active'); });
+  }
+  render();
+}
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('overlay').classList.toggle('open');
@@ -761,13 +781,17 @@ function buildFilters(){
   }).join('');
 }
 function setTypeFilter(type,el){
-  activeType=type;
+  activeType=type; activeKpi='all';
+  document.querySelectorAll('.kpi').forEach(k=>k.classList.remove('kpi-active'));
+  const allKpi=document.querySelector('.kpi[data-kpi="all"]'); if(allKpi) allKpi.classList.add('kpi-active');
   document.querySelectorAll('#filter-group .filter-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active'); render();
   if(window.innerWidth<=900) toggleSidebar();
 }
 function setStatusFilter(status,el){
-  activeStatus=status;
+  activeStatus=status; activeKpi='all';
+  document.querySelectorAll('.kpi').forEach(k=>k.classList.remove('kpi-active'));
+  const allKpi=document.querySelector('.kpi[data-kpi="all"]'); if(allKpi) allKpi.classList.add('kpi-active');
   document.querySelectorAll('#status-group .filter-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active'); render();
   if(window.innerWidth<=900) toggleSidebar();
@@ -814,6 +838,9 @@ function render(){
   const sbLabel = s=>{ const u=s.toUpperCase(); return u==='REGISTERED'?'REG':u==='NOT REGISTERED'?'NOT REG':u==='EXPIRED'?'EXPIRED':s||'—'; };
 
   let list=allVehicles.filter(v=>{
+    if(activeKpi==='registered' && v.status!=='REGISTERED') return false;
+    if(activeKpi==='loan'       && !v.loanStatus.includes('ON GOING')) return false;
+    if(activeKpi==='gps'        && !v.gps) return false;
     if(activeType  !=='ALL' && v.type  !==activeType)   return false;
     if(activeStatus!=='ALL' && v.status!==activeStatus) return false;
     if(q && ![v.name,v.plate,v.from,v.type].join(' ').toLowerCase().includes(q)) return false;
@@ -829,6 +856,10 @@ function render(){
   });
 
   document.getElementById('result-count').textContent=list.length+' records';
+  const kpiLbl=document.getElementById('kpi-filter-label');
+  const kpiNames={all:'',registered:'REGISTERED',loan:'ACTIVE LOANS',gps:'GPS EQUIPPED'};
+  if(activeKpi!=='all'){ kpiLbl.textContent=kpiNames[activeKpi]; kpiLbl.style.display='inline-block'; }
+  else { kpiLbl.style.display='none'; }
 
   /* Desktop table */
   const rows=list.length
