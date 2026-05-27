@@ -6,10 +6,10 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="KBC Vehicles"/>
+<meta name="apple-mobile-web-app-title" content="SOV Vehicles"/>
 <meta name="theme-color" content="#050A05"/>
-<title>KBC Vehicles</title>
-<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;KBC Vehicles&quot;,&quot;short_name&quot;:&quot;KBC&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23050A05&quot;,&quot;theme_color&quot;:&quot;%23050A05&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23050A05'/><text y='72' x='50' text-anchor='middle' font-size='60' fill='%2300FF41'>K</text></svg>&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}"/>
+<title>SOV Vehicles</title>
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;SOV Vehicles&quot;,&quot;short_name&quot;:&quot;SOV&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23050A05&quot;,&quot;theme_color&quot;:&quot;%23050A05&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23050A05'/><text y='72' x='50' text-anchor='middle' font-size='60' fill='%2300FF41'>S</text></svg>&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -204,7 +204,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
-  /* topbar is fixed so shell doesn't reserve space for it */
   .shell{display:block;min-height:100vh}
   .topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:calc(var(--topbar-h) + var(--sat));padding-top:var(--sat);padding-left:calc(12px + var(--sal));padding-right:calc(8px + var(--sar))}
   .sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;z-index:160;transform:translateX(-100%);padding-top:calc(var(--topbar-h) + 16px)}
@@ -349,14 +348,212 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .pc-btn-cancel:hover{border-color:var(--text2);color:var(--text)}
 .pc-btn-ok{background:var(--dim2);border:1px solid var(--g3);border-radius:var(--r);color:var(--g0);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.08em;padding:7px 20px;cursor:pointer;transition:all 0.15s}
 .pc-btn-ok:hover{background:var(--dim3);border-color:var(--g1)}
+
+/* ── LOADING SCREEN ── */
+#loading-screen{
+  position:fixed;inset:0;z-index:99999;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;
+  padding:env(safe-area-inset-top,32px) 32px calc(36px + env(safe-area-inset-bottom,0px));
+  transition:opacity 0.6s ease, visibility 0.6s ease;
+  overflow:hidden;
+}
+#loading-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
+
+/* scanlines */
+#loading-screen::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
+  pointer-events:none;z-index:1
+}
+#loading-screen::after{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,255,65,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.04) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:1
+}
+
+/* floating vehicle icons behind everything */
+.ls-vehicles{
+  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
+}
+.ls-v{
+  position:absolute;opacity:0;
+  animation:ls-drift 8s ease-in-out infinite;
+}
+.ls-v:nth-child(1){ left:8%;  top:18%; animation-delay:0s;    animation-duration:9s; }
+.ls-v:nth-child(2){ right:10%;top:28%; animation-delay:1.4s;  animation-duration:11s;}
+.ls-v:nth-child(3){ left:14%; bottom:28%; animation-delay:2.8s; animation-duration:10s;}
+.ls-v:nth-child(4){ right:8%; bottom:22%; animation-delay:0.7s; animation-duration:8.5s;}
+.ls-v:nth-child(5){ left:42%; top:12%; animation-delay:3.5s;  animation-duration:12s;}
+@keyframes ls-drift{
+  0%{opacity:0;transform:translateY(6px)}
+  15%{opacity:1}
+  85%{opacity:1}
+  100%{opacity:0;transform:translateY(-6px)}
+}
+
+/* center block */
+.ls-center{
+  position:relative;z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  flex:1;justify-content:center;
+}
+.ls-logo-sov{
+  font-family:var(--font);font-size:80px;font-weight:800;
+  color:var(--g0);letter-spacing:0.06em;line-height:1;
+  text-shadow:0 0 40px rgba(0,255,65,0.5),0 0 80px rgba(0,255,65,0.2);
+  animation:ls-glow 2.5s ease-in-out infinite;
+}
+@keyframes ls-glow{
+  0%,100%{text-shadow:0 0 40px rgba(0,255,65,0.5),0 0 80px rgba(0,255,65,0.2)}
+  50%{text-shadow:0 0 70px rgba(0,255,65,0.85),0 0 140px rgba(0,255,65,0.35)}
+}
+.ls-logo-sub{
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  color:var(--text3);letter-spacing:0.28em;text-transform:uppercase;
+  margin-top:4px;
+}
+.ls-bar-wrap{
+  margin-top:40px;width:min(260px,64vw);
+  display:flex;flex-direction:column;gap:7px;
+}
+.ls-bar-track{
+  width:100%;height:2px;background:rgba(0,255,65,0.08);
+  border-radius:2px;overflow:hidden;
+}
+.ls-bar-fill{
+  height:100%;width:0%;background:linear-gradient(90deg,var(--g3),var(--g0));
+  border-radius:2px;
+  box-shadow:0 0 10px rgba(0,255,65,0.7);
+  transition:width 0.12s linear;
+}
+.ls-bar-pct{
+  font-family:var(--mono);font-size:9px;color:var(--text3);
+  letter-spacing:0.14em;text-align:right;
+}
+
+/* bottom credit */
+.ls-bottom{
+  position:relative;z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+}
+.ls-dev-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.22em;
+  color:var(--text3);text-transform:uppercase;
+}
+.ls-dev-name{
+  font-family:var(--mono);font-size:12px;font-weight:400;
+  letter-spacing:0.1em;color:var(--g1);
+}
 </style>
+
 </head>
 <body>
+
+<!-- ══════════════════════════════════════
+     LOADING SCREEN
+══════════════════════════════════════ -->
+<div id="loading-screen">
+
+  <!-- floating minimalist vehicle silhouettes -->
+  <div class="ls-vehicles">
+
+    <!-- sedan / personal car -->
+    <div class="ls-v">
+      <svg width="72" height="32" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="16" width="64" height="10" rx="2" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <path d="M16 16 C18 8 22 6 30 6 L44 6 C52 6 56 8 58 16" stroke="rgba(0,255,65,0.18)" stroke-width="1" fill="none"/>
+        <circle cx="18" cy="26" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="54" cy="26" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="18" cy="26" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="54" cy="26" r="1.5" fill="rgba(0,255,65,0.15)"/>
+      </svg>
+    </div>
+
+    <!-- wing van / truck -->
+    <div class="ls-v">
+      <svg width="90" height="36" viewBox="0 0 90 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="10" width="72" height="18" rx="2" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <rect x="74" y="14" width="14" height="14" rx="1" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <line x1="74" y1="14" x2="74" y2="28" stroke="rgba(0,255,65,0.14)" stroke-width="1"/>
+        <circle cx="16" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="60" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="78" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="16" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="60" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="78" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <line x1="2" y1="18" x2="74" y2="18" stroke="rgba(0,255,65,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
+      </svg>
+    </div>
+
+    <!-- tanker -->
+    <div class="ls-v">
+      <svg width="86" height="34" viewBox="0 0 86 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="18" y="14" width="14" height="14" rx="1" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <ellipse cx="51" cy="17" rx="31" ry="11" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <ellipse cx="51" cy="17" rx="31" ry="11" stroke="rgba(0,255,65,0.05)" stroke-width="6"/>
+        <line x1="20" y1="17" x2="82" y2="17" stroke="rgba(0,255,65,0.1)" stroke-width="1"/>
+        <rect x="48" y="6" width="6" height="4" rx="1" stroke="rgba(0,255,65,0.15)" stroke-width="1"/>
+        <circle cx="26" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="66" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="78" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="26" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="66" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="78" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+      </svg>
+    </div>
+
+    <!-- pickup / truck side view -->
+    <div class="ls-v">
+      <svg width="78" height="34" viewBox="0 0 78 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="16" width="74" height="12" rx="2" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <path d="M6 16 C8 9 12 7 20 7 L38 7 C44 7 46 10 46 16" stroke="rgba(0,255,65,0.18)" stroke-width="1" fill="none"/>
+        <line x1="46" y1="16" x2="46" y2="16" stroke="rgba(0,255,65,0.14)" stroke-width="1"/>
+        <rect x="46" y="13" width="2" height="3" fill="rgba(0,255,65,0.12)"/>
+        <circle cx="16" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="60" cy="28" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="16" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="60" cy="28" r="1.5" fill="rgba(0,255,65,0.15)"/>
+      </svg>
+    </div>
+
+    <!-- small van top-right -->
+    <div class="ls-v">
+      <svg width="66" height="32" viewBox="0 0 66 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="10" width="62" height="16" rx="3" stroke="rgba(0,255,65,0.18)" stroke-width="1"/>
+        <path d="M2 18 L64 18" stroke="rgba(0,255,65,0.08)" stroke-width="1"/>
+        <rect x="4" y="12" width="18" height="6" rx="1" stroke="rgba(0,255,65,0.14)" stroke-width="1"/>
+        <circle cx="14" cy="26" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="52" cy="26" r="5" stroke="rgba(0,255,65,0.22)" stroke-width="1" fill="none"/>
+        <circle cx="14" cy="26" r="1.5" fill="rgba(0,255,65,0.15)"/>
+        <circle cx="52" cy="26" r="1.5" fill="rgba(0,255,65,0.15)"/>
+      </svg>
+    </div>
+
+  </div>
+
+  <div class="ls-center">
+    <div class="ls-logo-sov">SOV</div>
+    <div class="ls-logo-sub">Summary of Vehicles</div>
+    <div class="ls-bar-wrap">
+      <div class="ls-bar-track"><div class="ls-bar-fill" id="ls-bar"></div></div>
+      <div class="ls-bar-pct" id="ls-pct">0%</div>
+    </div>
+  </div>
+
+  <div class="ls-bottom">
+    <div class="ls-dev-label">Developed by</div>
+    <div class="ls-dev-name">Mark John Guillermo</div>
+  </div>
+
+</div>
+
 <div class="shell">
 
   <!-- TOPBAR -->
   <header class="topbar">
-    <div class="logo">KBC<span>VEHICLES</span></div>
+    <div class="logo">SOV<span>Summary of Vehicles</span></div>
     <div class="topbar-mid">
       <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -444,7 +641,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
     <div>
       <div class="sec-header">
-        <span class="sec-title">Vehicle Registry<span id="kpi-filter-label" style="font-size:9px;font-weight:500;font-family:var(--mono);color:var(--text3);letter-spacing:0.1em;padding:2px 6px;border-radius:2px;background:var(--dim);border:1px solid var(--border);display:none;margin-left:6px"></span></span>
+        <span class="sec-title">Vehicle Registry</span>
         <div class="sec-controls">
           <span class="result-count" id="result-count">—</span>
           <select class="sort-sel" id="sort-sel" onchange="render()">
@@ -653,14 +850,11 @@ let currentVehicleRFID = '';
 /* ── HELPERS ── */
 function setKpiFilter(kpi, el){
   activeKpi = kpi;
-  // Update active class on KPI cards
   document.querySelectorAll('.kpi').forEach(k => k.classList.remove('kpi-active'));
   if(el) el.classList.add('kpi-active');
-  // Reset other filters when switching KPI for clarity
   if(kpi !== 'all'){
     activeType   = 'ALL';
     activeStatus = 'ALL';
-    // Sync sidebar filter buttons back to ALL
     document.querySelectorAll('#filter-group .filter-btn').forEach((b,i)=>{ if(i===0) b.classList.add('active'); else b.classList.remove('active'); });
     document.querySelectorAll('#status-group .filter-btn').forEach((b,i)=>{ if(i===0) b.classList.add('active'); else b.classList.remove('active'); });
   }
@@ -706,12 +900,14 @@ async function loadData(){
     dc.classList.add('visible');
     document.getElementById('ds-name').textContent  = 'SUMMARY_OF_VEHICLES';
     document.getElementById('ds-sheet').textContent = '📄 Sheet1 · ' + allVehicles.length + ' rows';
+    if(window._loadingFinish) window._loadingFinish();
 
   } catch(e) {
     document.getElementById('table-wrap').innerHTML = `<div class="error-box">⚠ FETCH ERROR — ${e.message}<br><br>Check Apps Script deployment:<br><b>Execute as: Me | Who has access: Anyone</b></div>`;
     document.getElementById('card-list').innerHTML = '';
     document.getElementById('live-status').style.display = 'flex';
     document.getElementById('live-status').textContent = 'ERROR';
+    if(window._loadingFinish) window._loadingFinish();
     console.error(e);
   }
 }
@@ -856,10 +1052,6 @@ function render(){
   });
 
   document.getElementById('result-count').textContent=list.length+' records';
-  const kpiLbl=document.getElementById('kpi-filter-label');
-  const kpiNames={all:'',registered:'REGISTERED',loan:'ACTIVE LOANS',gps:'GPS EQUIPPED'};
-  if(activeKpi!=='all'){ kpiLbl.textContent=kpiNames[activeKpi]; kpiLbl.style.display='inline-block'; }
-  else { kpiLbl.style.display='none'; }
 
   /* Desktop table */
   const rows=list.length
@@ -966,7 +1158,6 @@ function openVModal(idx){
   if(hasLoan){
     loanSection.style.display = 'block';
 
-    /* badge */
     const loanBadge = document.getElementById('vm-loan-badge');
     if(v.loanStatus.includes('ON GOING')){
       loanBadge.className   = 'lb lb-ongoing';
@@ -985,7 +1176,6 @@ function openVModal(idx){
     const remMonths = v.remainingMonths ? parseInt(v.remainingMonths,10) : 0;
     document.getElementById('vm-months-inline').textContent = remMonths ? remMonths+' months' : (v.loanStatus.includes('ON GOING') ? 'Ongoing' : 'Completed');
 
-    /* Progress bar: estimate total months from start → end if possible */
     let progressPct = 0;
     if(v.loanStart && v.loanEnd){
       const start = new Date(v.loanStart);
@@ -1000,7 +1190,6 @@ function openVModal(idx){
     }
     setTimeout(()=>{ document.getElementById('vm-months-fill').style.width = progressPct+'%'; }, 60);
 
-    /* Balance breakdown */
     const balanceBox = document.getElementById('vm-balance-box');
     if(monthlyAmt && remMonths){
       const totalBalance = monthlyAmt * remMonths;
@@ -1009,7 +1198,6 @@ function openVModal(idx){
       document.getElementById('vb-total').textContent      = '₱'+totalBalance.toLocaleString();
       balanceBox.style.display = 'flex';
     } else if(monthlyAmt && !remMonths && v.loanStatus.includes('ON GOING')){
-      /* No remaining months data — still show monthly */
       document.getElementById('vb-monthly').textContent    = '₱'+monthlyAmt.toLocaleString();
       document.getElementById('vb-rem-months').textContent = 'N/A';
       document.getElementById('vb-total').textContent      = 'N/A';
@@ -1024,7 +1212,6 @@ function openVModal(idx){
   /* Open modal */
   const overlay = document.getElementById('vmodalOverlay');
   overlay.classList.add('open');
-  /* tiny rAF so display:flex is painted before opacity transition fires */
   requestAnimationFrame(()=> requestAnimationFrame(()=> overlay.classList.add('is-visible')));
   document.body.style.overflow = 'hidden';
 }
@@ -1032,12 +1219,10 @@ function openVModal(idx){
 function closeVModal(){
   const overlay = document.getElementById('vmodalOverlay');
   overlay.classList.remove('is-visible');
-  /* wait for transition to finish before hiding */
   overlay.addEventListener('transitionend', function handler(e){
     if(e.target !== overlay) return;
     overlay.classList.remove('open');
     overlay.removeEventListener('transitionend', handler);
-    /* reset for clean re-open */
     document.getElementById('vm-months-fill').style.width = '0%';
   });
   document.body.style.overflow = '';
@@ -1060,7 +1245,6 @@ function copyRFID(){
       label.textContent = 'COPY';
     }, 2000);
   }).catch(()=>{
-    /* fallback for older browsers */
     const ta = document.createElement('textarea');
     ta.value = currentVehicleRFID;
     ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -1109,6 +1293,42 @@ function pcSubmit(){
     inp.value=''; setTimeout(()=>inp.focus(),50);
   }
 }
+
+/* ── LOADING SCREEN ── */
+(function(){
+  const screen = document.getElementById('loading-screen');
+  const bar    = document.getElementById('ls-bar');
+  const pct    = document.getElementById('ls-pct');
+  let progress = 0;
+  let done     = false;
+
+  /* Animate bar to ~85% quickly, then stall until data loads */
+  const tick = setInterval(()=>{
+    if(done) return;
+    const target = done ? 100 : 85;
+    const step   = progress < 40 ? 3 : progress < 70 ? 1.5 : 0.4;
+    progress = Math.min(progress + step, target);
+    bar.style.width = progress + '%';
+    pct.textContent = Math.round(progress) + '%';
+    if(progress >= 85) clearInterval(tick);
+  }, 40);
+
+  window._loadingFinish = function(){
+    done = true;
+    clearInterval(tick);
+    /* quickly fill to 100% */
+    let p = progress;
+    const finish = setInterval(()=>{
+      p = Math.min(p + 4, 100);
+      bar.style.width = p + '%';
+      pct.textContent = Math.round(p) + '%';
+      if(p >= 100){
+        clearInterval(finish);
+        setTimeout(()=>{ screen.classList.add('hide'); }, 300);
+      }
+    }, 20);
+  };
+})();
 
 loadData();
 </script>
